@@ -12,7 +12,7 @@ config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Toke
 client = CosS3Client(config)
 def up_tencent(localfilepath,key):
     client.upload_file(
-        Bucket='huang-1258465420',
+        Bucket='xxxxxxxxxxx',
         LocalFilePath=localfilepath,#'D:\图片/v2-6cd79620efc0e75e5aed53df917addbd_r.jpg',
         Key=key,#'web_file/picture.jpg',
         PartSize=1,
