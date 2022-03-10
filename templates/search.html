@@ -1,0 +1,357 @@
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<!--     <meta name="viewport" content="width=device-width, initial-scale=1">
+上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>搜索</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+<link href="https://cdn.jsdelivr.net/npm/@bootcss/v3.bootcss.com@1.0.10/assets/css/docs.min.css" rel="stylesheet">
+
+
+
+
+
+<script src="https://huang-1258465420.cos.ap-shanghai.myqcloud.com/axios.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+
+<style>
+
+     body { padding-top: 70px; }
+     .pandingsm { padding-bottom :10px;}
+     .panding { padding-bottom :20px;}
+     .pandingright { padding-right :30px;}
+     .pandingtwo { padding-bottom :60px;}
+     .pandingtop { padding-top :60px;}
+
+</style>
+
+
+
+
+<style>
+
+.site-header {
+  background-color: rgba(0, 0, 0, .85);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+.site-header a {
+  color: #999;
+  transition: ease-in-out color .15s;
+}
+.site-header a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+</style>
+
+
+
+
+
+
+  </head>
+  <body style="background-color:#fbfbfd">
+
+
+
+
+      <nav class="navbar navbar-inverse navbar-fixed-top site-header ">
+        <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/" style="color:white">Huang</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li><a href="/bbs">Huang-BBS</a></li>
+            <li><a href="/cloud">Ayaka-Cloud</a></li>
+            <li><a href="/tools">Smart-Tools</a></li>
+      </ul>
+         <form class="navbar-form navbar-left" method="get" action="/search">
+        <div class="form-group" >
+          <input  type="text"  style= "background-color:   transparent;   border:   0px;color:white " name="s" id="s" required="" class="form-control" placeholder="Input-Search">
+        </div>
+      </form>
+        <ul id="user" class="nav navbar-nav navbar-right">
+            <li v-if = 'user.token'  ><a href="/about/me">{{user.name}}</a></li>
+            <li v-else ><a href="/sign">Sign & Register</a></li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+      </nav>
+
+
+
+<div class="container">
+
+
+
+    <div class="panding"></div>
+<div class="row">
+    <div class="container">
+    <form class="" method="get" action="/search">
+        <div class="form-group" >
+            <label>搜索</label>
+            <input name="s" type="text" class="input-lg form-control" placeholder="回车以搜索">
+        </div>
+      </form>
+    </div>
+</div>
+
+    <div class="panding"></div>
+
+
+
+ <div class="row" id="search_value">
+            <h3 class="text-left col-xs-8 col-md-8"> 关于 {{ search_value }} 的搜索结果 </h3>
+            <a href="/bbs"><h3 class="lead c text-right pandingright">回到主页</h3></a>
+            <hr style="border: none; border-top: 1px solid rgb(190,190,190);">
+        </div>
+
+
+
+
+
+<div id="main">
+
+
+
+    <h3 v-if=" main.length == 0 " class="col-xs-12 col-md-12"> 没有找到搜索结果奥,请检查字符是否有输错.
+        <small>支持模糊搜索,例如【小明的帖子】,只需要搜索[小]也可成功查找.</small>
+    </h3>
+
+
+<div v-for="file in main">
+
+<a v-if=" file.type == 'post'" class="thumbnail"  :href="'/content/' + file.tid" >
+
+    <div   class="row" style="color: black">
+        <div class="panding"></div>
+        <div class="col-xs-8 col-md-8">
+            <p  class="lead text-left">&nbsp;{{ file.abstract }}</p>
+        </div>
+        <div class="col-xs-4 col-md-4">
+            <p class="text-right">{{ file.time }}&nbsp;|&nbsp;author&nbsp; </p>
+        </div>
+    </div>
+
+</a>
+
+
+<a v-if="file.type=='file'" class="thumbnail"  :href="'/file/' + file.id" >
+        <div   class="row" style="color: black">
+
+    <div  class="col-xs-12 col-md-12" >
+        <center>
+            <h3>{{ file.summary }} </h3><p>{{ file.time }}</p>
+        </center>
+    </div>
+        </div>
+</a>
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<!--    <center>-->
+
+<!--    <button type="button" class="btn btn-default btn-lg">加载更多</button>-->
+
+<!--    </center>-->
+
+
+</div>
+
+    <div class="panding"></div>
+
+    <div class="panding"></div>
+
+
+<!--<footer class="bs-docs-footer">-->
+<!--  <div class="container">-->
+<!--    <ul class="bs-docs-footer-links">-->
+<!--      <li><a href="/about/">关于</a></li>-->
+<!--    </ul>-->
+<!--    <p>设计者HUANG.时间2022</p>-->
+<!--  </div>-->
+<!--</footer>-->
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+function getCookie(cname){
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) {
+		var c = ca[i].trim();
+		if (c.indexOf(name)==0) { return c.substring(name.length,c.length); }
+	}
+	return "";
+}
+
+
+
+
+var main = new Vue({
+		el: '#main',
+		data: {
+			main : [{ summary: "正在加载中 ..." ,
+		    		  id : "",
+		    		  time : "...天前",
+		    		  type : '',
+		              summary : '',
+		    		  content : ['https://huang-1258465420.cos.ap-shanghai.myqcloud.com/u%3D3245333903%2C1204055057%26fm%3D26%26gp%3D0.gif']
+		    		         }],
+		},
+
+		methods:{
+		click1 : function () {
+
+			axios.post('/api/get_data',{
+                    type : "main_index_more"
+                })
+                .then(function (response) {
+                    main.main = main.main.concat(response.data.main)
+
+                }.bind(this)).catch(function (error) {
+                    console.log(error);
+                });
+		},
+
+	},
+
+	});
+
+
+
+
+</script>
+
+
+
+    <script>
+
+
+
+var search_value = new Vue({
+		el: '#search_value',
+		data: {
+			search_value : getCookie("search_value")
+		}
+
+
+})
+
+
+
+        axios.post('/api/search',{
+                    type : "post"
+                })
+                .then(function (response) {
+
+                    main.main = response.data.search_result;
+                    search_value.search_value = response.data.search_value;
+
+                    //if ( response.data.user != "") {
+                        //alert(response.data.user)
+                    //    user.user = response.data.user;
+                     //   }
+
+
+                }.bind(this)).catch(function (error) {
+                    console.log(error);
+                });
+
+
+
+
+var user = new Vue({
+		el: '#user',
+		data: {
+			user : {
+			            tid : "tid",
+			            name : '',
+		                token : getCookie('token')
+		    		  },
+		},
+	});
+
+
+
+
+
+   axios.post('/api/get_name',{
+                    token : getCookie('token')
+                })
+                .then(function (response) {
+                    user.user.name = response.data ;
+
+                }.bind(this)).catch(function (error) {
+                    console.log(error);
+                });
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+  </body>
+</html>

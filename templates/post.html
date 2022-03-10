@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://huang-1258465420.cos.ap-shanghai.myqcloud.com/bootstrap5/bootstrap.min.css" rel="stylesheet">
+
+    <title>帖子</title>
+
+
+
+
+<script src="https://huang-1258465420.cos.ap-shanghai.myqcloud.com/axios.min.js"></script>
+     <script src="https://huang-1258465420.cos.ap-shanghai.myqcloud.com/vue2/vue.js"></script>
+
+   <style>
+
+.site-header {
+  background-color: rgba(0, 0, 0, .8);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+.site-header a {
+  color: #999;
+  transition: ease-in-out color .15s;
+}
+.site-header a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.bg-poster {
+    -ms-background-size: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+.bg-effect {
+<!--    position: absolute;-->
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+
+.blur{
+filter:blur(10px);
+-webkit-filter:blur(10px);
+-moz-filter:blur(10px);
+-ms-filter:blur(10px);
+-o-filter:blur(10px);
+}
+
+.blurr {
+  background-color: rgba(0, 0, 0, .5);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  backdrop-filter: saturate(180%) blur(8px);
+}
+
+</style>
+
+
+
+
+
+
+
+
+
+
+  </head>
+  <body>
+
+
+
+
+  <nav class="navbar navbar-expand-lg fixed-top navbar-dark site-header" style="padding-top: 5px;padding-bottom: 5px;">
+  <div id="user" style="max-width: 1170px;" class="container">
+    <a class="navbar-brand " href="/">Huang</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="text-dark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+      </span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active " aria-current="page" href="/bbs"> &nbsp;论坛 &nbsp;</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/cloud"> &nbsp;云盘 &nbsp;</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/tools"> &nbsp;工具箱 &nbsp;</a>
+        </li>
+        <form class="d-flex" method="get" action="/search">
+          <input class="form-control me-2" type="search" style= "background-color:   transparent;   border:   0px;color:white " name="s" id="s" required="" placeholder="在此键入内容以搜索" aria-label="Search">
+        </form>
+      </ul>
+        <a v-if = 'user.token' class="nav-link navbar-nav" href="/about/me">{{user.name}}</a>
+        <a v-else class="nav-link navbar-nav " href="/sign">登录 & 注册</a>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="jumbotron bg-poster bg-effect"  style="background-image: url('https://api.btstu.cn/sjbz/api.php?lx=dongman&amp;format=images');padding-top: 10px;padding-bottom: 10px;">
+
+<div style="height:80px"></div>
+
+
+
+        <div class="">
+            <div class="row">
+                <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                    <h1 class="text-center blurr" style="color:LightCyan ; border-radius: 6px; padding-top:10px;padding-bottom:10px;">
+                        帖子 大厅
+                    </h1>
+                    </div>
+                        <div class="col-md-2"></div>
+            </div>
+            <div class="text-center">
+                <a class="btn blurr btn-lg" style="color:white; margin-right:5px;" href="/edit" role="button">&nbsp; 发表 &nbsp;</a>
+                                <a class="btn blurr btn-lg" style="color:white;" href="/search" role="button">&nbsp; 查找 &nbsp;</a>
+
+            </div>
+        </div>
+
+    <div style="height:30px"></div>
+
+
+    </div>
+
+
+<div id="main" class="container" style="max-width:1060px">
+
+
+
+
+
+<!--  <ul class="shadow-sm p-2 nav border rounded border-dark  bg-light bg-gradient">-->
+<!--  <li class="nav-item">-->
+<!--    <a class="nav-link active" aria-current="page" href="#">论坛大厅</a>-->
+<!--  </li>-->
+<!--  <li class="nav-item">-->
+<!--    <a class="nav-link text-secondary" href="#">热门帖子</a>-->
+<!--  </li>-->
+<!--&lt;!&ndash;  <li class="nav-item">&ndash;&gt;-->
+<!--&lt;!&ndash;    <a class="nav-link text-secondary" href="#">发表帖子</a>&ndash;&gt;-->
+<!--&lt;!&ndash;  </li>&ndash;&gt;-->
+<!--&lt;!&ndash;  <li class="nav-item">&ndash;&gt;-->
+<!--&lt;!&ndash;    <a class="nav-link text-secondary" href="/search">查找</a>&ndash;&gt;-->
+<!--&lt;!&ndash;  </li>&ndash;&gt;-->
+<!--</ul>-->
+
+
+<!--<div class="my-3">-->
+<!--<div class="row">-->
+
+
+<!--  <div class="col-md-6">-->
+<!--      <a href="/edit" class="shadow-sm border rounded my-2 d-flex justify-content-center align-items-center btn btn-outline-light">-->
+<!--        <div class="py-2 "><strong class="text-secondary">发表帖子</strong></div>-->
+<!--      </a>-->
+<!--  </div>-->
+
+<!--<div class="col-md-6">-->
+<!--      <a href="/search" class="shadow-sm border rounded my-2 d-flex justify-content-center align-items-center btn btn-outline-light">-->
+<!--        <div class="py-2 "><strong class="text-secondary">在论坛查找内容</strong></div>-->
+<!--      </a>-->
+<!--  </div>-->
+
+
+<!--</div>-->
+<!--</div>-->
+
+
+<h3 class="pb-4 my-5 mb-4 fst-italic border-bottom">
+       公开的帖子
+      </h3>
+
+<a class="btn-outline-light" v-for="file in main" :href="'/content/' + file.tid" >
+<div class="row my-4">
+  <div class="col-md-9">
+        <div class="shadow-sm card bg-light bg-opacity-10">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-auto me-auto">
+                <div class=" text-black ">&nbsp;&nbsp;{{ file.abstract }}</div>
+              </div>
+              <div class="col-auto ">
+                <div class=" text-black "><small>{{ file.time }}&nbsp;&nbsp;</small></div>
+              </div>
+              </div>
+            </div>
+        </div>
+  </div>
+</div>
+</a>
+
+
+
+
+
+
+
+  <div class="row my-5">
+    <div class="col-md-9">
+        <button class="shadow-sm d-block mx-auto btn btn-outline-secondary " type="button">没有更多了。</button>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+<hr>
+
+
+
+
+
+   <footer style="max-width: 960px;" class="container py-5">
+
+
+       <div class="row">
+    <div class="col-12 col-md">
+
+      <p>Huang-社区</p>
+      <small class="d-block mb-3 text-muted">来自 HuangZedong </small>
+      <small class="d-block mb-3 text-muted">&copy; 2018–2022</small>
+    </div>
+    <div class="col-6 col-md">
+      <h5>服务</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="link-secondary" href="/bbs">社区论坛</a></li>
+        <li><a class="link-secondary" href="/cloud">社区云盘</a></li>
+        <li><a class="link-secondary" href="/tools">智能工具箱</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>资源</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="link-secondary" href="/videos">视频</a></li>
+        <li><a class="link-secondary" href="/audios">音频</a></li>
+        <li><a class="link-secondary" href="/docs">文档</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>账户</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="link-secondary" href="/trouble">困难与帮助</a></li>
+        <li><a class="link-secondary" href="/manage">管理账号信息</a></li>
+        <li><a class="link-secondary" href="/database">管理数据库</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>关于</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="link-secondary" href="/team">团队</a></li>
+        <li><a class="link-secondary" href="/contact">地址与联系方式</a></li>
+        <li><a class="link-secondary" href="/privacy">隐私协议</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+
+<script>
+
+
+
+function getCookie(cname){
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) {
+		var c = ca[i].trim();
+		if (c.indexOf(name)==0) { return c.substring(name.length,c.length); }
+	}
+	return "";
+}
+
+
+
+
+var main = new Vue({
+		el: '#main',
+		data: {
+			main : [{ summary: "正在加载中 ..." ,
+		    		  id : "",
+		    		  time : "...天前",
+		    		  content : ['https://huang-1258465420.cos.ap-shanghai.myqcloud.com/u%3D3245333903%2C1204055057%26fm%3D26%26gp%3D0.gif']
+		    		         }],
+		},
+
+		methods:{
+		click1 : function () {
+
+			axios.post('/api/get_data',{
+                    type : "main_index_more"
+                })
+                .then(function (response) {
+                    main.main = main.main.concat(response.data.main)
+
+                }.bind(this)).catch(function (error) {
+                    console.log(error);
+                });
+		},
+
+	},
+
+	});
+
+
+
+
+</script>
+
+
+
+    <script>
+
+        axios.post('/api/get_data1',{
+                    type : "post"
+                })
+                .then(function (response) {
+
+                    main.main = response.data;
+
+                    //if ( response.data.user != "") {
+                        //alert(response.data.user)
+                    //    user.user = response.data.user;
+                     //   }
+
+
+                }.bind(this)).catch(function (error) {
+                    console.log(error);
+                });
+
+
+
+
+var user = new Vue({
+		el: '#user',
+		data: {
+			user : {
+			            tid : "tid",
+			            name : '',
+		                token : getCookie('token')
+		    		  },
+		},
+	});
+
+
+
+
+
+   axios.post('/api/get_name',{
+                    token : getCookie('token')
+                })
+                .then(function (response) {
+                    user.user.name = response.data ;
+
+                }.bind(this)).catch(function (error) {
+                    console.log(error);
+                });
+
+
+
+
+    </script>
+
+
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://huang-1258465420.cos.ap-shanghai.myqcloud.com/bootstrap5/bootstrap.bundle.min.js"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
